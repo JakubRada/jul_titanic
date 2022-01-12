@@ -1,5 +1,3 @@
-module titanic
-
-# Write your package code here.
+module Titanic
 
 end
