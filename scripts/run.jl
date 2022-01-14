@@ -1,2 +1,4 @@
 using Revise
-using Titanic
+using titanic
+
+regression()

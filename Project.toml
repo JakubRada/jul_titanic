@@ -3,6 +3,12 @@ uuid = "73d388ad-17bb-4b2b-a9eb-04bfbf14bd40"
 authors = ["Jakub Rada <radajak5@fel.cvut.cz>"]
 version = "1.0.0"
 
+[deps]
+CSV = "336ed68f-0bac-5ca0-87d4-7b16caf5d00b"
+DataFrames = "a93c6f00-e57d-5684-b7b6-d8193f3e46c0"
+LinearAlgebra = "37e2e46d-f89d-539d-b4ee-838fcccc9c8e"
+Parameters = "d96e819e-fc66-5662-9728-84c9c7592b0a"
+
 [compat]
 julia = "1.7"
 
