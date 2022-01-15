@@ -9,6 +9,12 @@ include("dataset.jl")
 include("io.jl")
 include("logistic.jl")
 
-export regression 
+export loadtrain
+export loadtest
+export savepredictions
+
+export regression
+export classify
+
 
 end

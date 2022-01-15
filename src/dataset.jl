@@ -6,31 +6,34 @@ struct Dataset
     function Dataset(data::DataFrame)
         ids = data[!, :PassengerId]
         passengers = length(ids)
-        X = zeros(passengers, 7)
+        X = ones(8, passengers)
 
         sex = ones(Float64, passengers)
         sex[data[!, :Sex] .== "female"] .= -1
-        X[:, 1] = sex
+        X[2, :] = sex
 
-        X[:, 2] = data[!, :Pclass]
+        X[3, :] = data[!, :Pclass]
 
         age = data[!, :Age]
-        avgage = round(sum(skipmissing(age)) / passengers; digits=2)
+        avgage = round(sum(skipmissing(age)) / (passengers - sum(ismissing.(age))); digits=2)
         age[ismissing.(age)] .= avgage
-        X[:, 3] = age
+        X[4, :] = age
 
-        X[:, 4] = data[!, :SibSp]
-        X[:, 5] = data[!, :Parch]
-        X[:, 6] = data[!, :Fare]
+        X[5, :] = data[!, :SibSp]
+        X[6, :] = data[!, :Parch]
+        fare = data[!, :Fare]
+        avgfare = round(sum(skipmissing(fare)) / (passengers - sum(ismissing.(fare))); digits=2)
+        fare[ismissing.(fare)] .= avgfare
+        X[7, :] = data[!, :Fare]
 
         embarked = data[!, :Embarked]
         embarkedprime = skipmissing(embarked)
         miss = argmax([sum(embarkedprime .== "C"), sum(embarkedprime .== "Q"), sum(embarkedprime .== "S")])
         embarked[ismissing.(embarked)] .= "M"
-        X[embarked .== "M", 7] .= miss
-        X[embarked .== "C", 7] .= 1
-        X[embarked .== "Q", 7] .= 2
-        X[embarked .== "S", 7] .= 3
+        X[8, embarked .== "M"] .= miss
+        X[8, embarked .== "C"] .= 1
+        X[8, embarked .== "Q"] .= 2
+        X[8, embarked .== "S"] .= 3
 
         return new(passengers, ids, X)
     end
@@ -50,12 +53,16 @@ struct Labels
         return new(ids, labels)
     end
 
-    function Labels(ids::Vector{Int64})
-        return new(ids, zeros(Int64, length(ids)))
+    function Labels(data::Dataset, survived::Vector{Int64})
+        return new(data.ids, survived)
     end
 end
 
 (labels::Labels)() = labels.survived
+
+function classificationerror(correct::Labels, prediction::Labels)
+    return sum(correct.survived .!= prediction.survived) / length(correct.survived)
+end
 
 function out(labels::Labels)
     survived = copy(labels.survived)
