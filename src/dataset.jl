@@ -2,6 +2,7 @@ struct Dataset
     passengers::Int64
     ids::Vector{Int64}
     X::Matrix{Float64}
+    ranges::Vector{Tuple{Float64, Float64}}
 
     function Dataset(data::DataFrame)
         ids = data[!, :PassengerId]
@@ -35,11 +36,17 @@ struct Dataset
         X[8, embarked .== "Q"] .= 2
         X[8, embarked .== "S"] .= 3
 
-        return new(passengers, ids, X)
+        ranges = [(minimum(x), maximum(x)) for x in eachrow(X)]
+
+        return new(passengers, ids, X, ranges)
     end
 end
 
 (dataset::Dataset)() = dataset.X
+
+function getranges(dataset::Dataset)
+    return dataset.ranges
+end
 
 struct Labels
     ids::Vector{Int64}

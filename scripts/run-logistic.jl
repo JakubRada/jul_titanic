@@ -1,7 +1,6 @@
 using Pkg
 Pkg.activate(pwd())
 
-using Revise
 using titanic
 
 traindata, trainlabels = loadtrain("../data/train.csv")
