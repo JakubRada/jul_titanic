@@ -21,6 +21,5 @@ export regression
 export boost
 export svm
 export classify
-export classificationerror
 
 end

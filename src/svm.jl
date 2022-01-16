@@ -7,8 +7,8 @@ function svm(dataset::Dataset, labels::Labels; C::Float64 = 10.0)
     return alpha
 end
 
-function kernel(xi::Vector{Float64}, xj::Vector{Float64})
-    return dot(xi, xj)
+function kernel(xi::Vector{Float64}, xj::Vector{Float64}; sigma::Float64 = 1.0)
+    return exp(-dot(xi - xj, xi - xj) / (2 * sigma^2))
 end
 
 function dual(X::Matrix{Float64}, y::Vector{Int64}, C::Float64)
