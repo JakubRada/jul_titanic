@@ -71,7 +71,7 @@ function bestWeak(H::StrongClassifier, X::Matrix{Float64}, ranges::Vector{Tuple{
             comp = [h(X[:, i]) for i in 1:n]
             diff = comp .!= y
             err = dot(diff, H.weights)
-            if err <= opterror
+            if err < opterror
                 opterror = err
                 opth = h
             end
@@ -80,7 +80,7 @@ function bestWeak(H::StrongClassifier, X::Matrix{Float64}, ranges::Vector{Tuple{
             comp = [h(X[:, i]) for i in 1:n]
             diff = comp .!= y
             err = dot(diff, H.weights)
-            if err <= opterror
+            if err < opterror
                 opterror = err
                 opth = h
             end
