@@ -1,15 +1,15 @@
 struct WeakClassifier
-    feature::Int64
-    threshold::Float64
+    feature::Integer
+    threshold::Real
     bigger::Bool
-    weight::Float64
+    weight::Real
 
-    function WeakClassifier(feature::Int64, threshold::Float64, bigger::Bool, error::Float64)
+    function WeakClassifier(feature::Integer, threshold::Real, bigger::Bool, error::Real)
         weight = log((1 - error) / error) / 2
         return new(feature, threshold, bigger, weight)
     end
 
-    function WeakClassifier(feature::Int64, threshold::Float64, bigger::Bool)
+    function WeakClassifier(feature::Integer, threshold::Real, bigger::Bool)
         return new(feature, threshold, bigger, 0.0)
     end
 
@@ -20,13 +20,13 @@ function Base.show(io::IO, h::WeakClassifier)
 end
 
 struct StrongClassifier
-    weights::Vector{Float64}
+    weights::Vector{<:Real}
     weaks::Vector{WeakClassifier}
-    Z::Vector{Float64}
+    Z::Vector{<:Real}
 
-    samples::Int64
+    samples::Integer
 
-    function StrongClassifier(samples::Int64)
+    function StrongClassifier(samples::Integer)
         initial = 1 / samples
         return new(fill(initial, samples), Vector{WeakClassifier}(undef, 0), zeros(0), samples)
     end
@@ -39,7 +39,7 @@ function Base.show(io::IO, H::StrongClassifier)
     end
 end
 
-function (h::WeakClassifier)(x::Vector{Float64})
+function (h::WeakClassifier)(x::Vector{<:Real})
     value = x[h.feature]
     if h.bigger
         return value >= h.threshold ? 1 : -1
@@ -48,18 +48,18 @@ function (h::WeakClassifier)(x::Vector{Float64})
     end
 end
 
-function (H::StrongClassifier)(x::Vector{Float64})
-    return Int64(sign(sum([h.weight * h(x) for h in H.weaks])))
+function (H::StrongClassifier)(x::Vector{<:Real})
+    return Integer(sign(sum([h.weight * h(x) for h in H.weaks])))
 end
 
-function updateWeights!(H::StrongClassifier, h::WeakClassifier, X::Matrix{Float64}, y::Vector{Int64})
+function updateWeights!(H::StrongClassifier, h::WeakClassifier, X::Matrix{<:Real}, y::Vector{<:Integer})
     newweights = [H.weights[i] * exp(-h.weight * y[i] * h(X[:, i])) for i in 1:size(X, 2)]
     Z = sum(newweights)
     push!(H.Z, Z * (length(H.Z) > 0 ? H.Z[end] : 1))
     H.weights .= newweights / Z
 end
 
-function bestWeak(H::StrongClassifier, X::Matrix{Float64}, ranges::Vector{Tuple{Float64, Float64}}, y::Vector{Int64})
+function bestWeak(H::StrongClassifier, X::Matrix{<:Real}, ranges::Vector{Tuple{<:Real, <:Real}}, y::Vector{<:Integer})
     dim, n = size(X)
     opterror = Inf64
     local opth
@@ -92,7 +92,7 @@ end
 
 addWeak!(H::StrongClassifier, h::WeakClassifier) = push!(H.weaks, h)
 
-function boost(data::Dataset, labels::Labels; limit::Int64 = 100)
+function boost(data::Dataset, labels::Labels; limit::Integer = 100)
     X = data()
     y = labels()
 

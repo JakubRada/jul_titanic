@@ -1,15 +1,15 @@
 struct Dataset
-    passengers::Int64
-    ids::Vector{Int64}
-    X::Matrix{Float64}
-    ranges::Vector{Tuple{Float64, Float64}}
+    passengers::Integer
+    ids::Vector{<:Integer}
+    X::Matrix{<:Real}
+    ranges::Vector{Tuple{<:Real, <:Real}}
 
     function Dataset(data::DataFrame)
         ids = data[!, :PassengerId]
         passengers = length(ids)
         X = ones(8, passengers)
 
-        sex = ones(Float64, passengers)
+        sex = ones(Real, passengers)
         sex[data[!, :Sex] .== "female"] .= -1
         X[2, :] = sex
 
@@ -49,18 +49,18 @@ function getranges(dataset::Dataset)
 end
 
 struct Labels
-    ids::Vector{Int64}
-    survived::Vector{Int64}
+    ids::Vector{<:Integer}
+    survived::Vector{<:Integer}
 
     function Labels(data::DataFrame)
         ids = data[!, :PassengerId]
         survived = data[!, :Survived]
-        labels = ones(Int64, length(survived))
+        labels = ones(Integer, length(survived))
         labels[survived .== 0] .= -1
         return new(ids, labels)
     end
 
-    function Labels(data::Dataset, survived::Vector{Int64})
+    function Labels(data::Dataset, survived::Vector{<:Integer})
         return new(data.ids, survived)
     end
 end

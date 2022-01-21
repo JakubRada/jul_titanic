@@ -1,4 +1,4 @@
-function svm(dataset::Dataset, labels::Labels; C::Float64 = 10.0)
+function svm(dataset::Dataset, labels::Labels; C::Real = 10.0)
     X = dataset()
     y = labels()
 
@@ -7,11 +7,11 @@ function svm(dataset::Dataset, labels::Labels; C::Float64 = 10.0)
     return alpha
 end
 
-function kernel(xi::Vector{Float64}, xj::Vector{Float64}; sigma::Float64 = 1.0)
+function kernel(xi::Vector{<:Real}, xj::Vector{<:Real}; sigma::Real = 1.0)
     return exp(-dot(xi - xj, xi - xj) / (2 * sigma^2))
 end
 
-function dual(X::Matrix{Float64}, y::Vector{Int64}, C::Float64)
+function dual(X::Matrix{<:Real}, y::Vector{<:Integer}, C::Real)
     _, n = size(X)
 
     qp = Model(OSQP.Optimizer)
@@ -27,7 +27,7 @@ function dual(X::Matrix{Float64}, y::Vector{Int64}, C::Float64)
     return value.(alpha)
 end
 
-function classify(x::Vector{Float64}, traindata::Dataset, trainlabels::Labels, alpha::Vector{Float64})
+function classify(x::Vector{<:Real}, traindata::Dataset, trainlabels::Labels, alpha::Vector{<:Real})
     X = traindata()
     y = trainlabels()
     n = length(y)
@@ -35,7 +35,7 @@ function classify(x::Vector{Float64}, traindata::Dataset, trainlabels::Labels, a
     return f >= 0 ? 1 : -1
 end
 
-function classify(test::Dataset, traindata::Dataset, trainlabels::Labels, alpha::Vector{Float64})
+function classify(test::Dataset, traindata::Dataset, trainlabels::Labels, alpha::Vector{<:Real})
     X = test()
     _, n = size(X)
     return Labels(test, [classify(X[:, i], traindata, trainlabels, alpha) for i in 1:n])
