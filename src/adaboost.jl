@@ -65,8 +65,9 @@ function bestWeak(H::StrongClassifier, X::Matrix{<:Real}, ranges::Vector{Tuple{<
     local opth
 
     for feature in 2:dim
+        x = sort(X[feature, :])
         l, u = ranges[feature]
-        for threshold in l:0.1:u
+        for threshold in x
             h = WeakClassifier(feature, threshold, true)
             comp = [h(X[:, i]) for i in 1:n]
             diff = comp .!= y

@@ -2,7 +2,6 @@ struct Dataset
     passengers::Integer
     ids::Vector{<:Integer}
     X::Matrix{<:Real}
-    ranges::Vector{Tuple{<:Real, <:Real}}
 
     function Dataset(data::DataFrame; normalize=true)
         ids = data[!, :PassengerId]
@@ -41,9 +40,7 @@ struct Dataset
             X[1, :] .= 1
         end
 
-        ranges = [(minimum(x), maximum(x)) for x in eachrow(X)]
-
-        return new(passengers, ids, X, ranges)
+        return new(passengers, ids, X)
     end
 end
 

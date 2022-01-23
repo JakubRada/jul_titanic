@@ -3,8 +3,8 @@ Pkg.activate(pwd())
 
 using titanic
 
-traindata, trainlabels = loadtrain("../data/train.csv")
-testdata = loadtest("../data/test.csv")
+traindata, trainlabels = loadtrain("../data/train.csv"; normalize=false)
+testdata = loadtest("../data/test.csv"; normalize=false)
 
 H = boost(traindata, trainlabels)
 

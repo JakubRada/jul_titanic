@@ -1,11 +1,11 @@
-function loadtrain(path::String)
+function loadtrain(path::String; kwargs...)
     data = CSV.read(path, DataFrame; normalizenames=true)
-    return Dataset(data), Labels(data)
+    return Dataset(data; kwargs...), Labels(data)
 end
 
-function loadtest(path::String)
+function loadtest(path::String; kwargs...)
     data = CSV.read(path, DataFrame; normalizenames=true)
-    return Dataset(data)
+    return Dataset(data; kwargs...)
 end
 
 function savepredictions(path::String, labels::Labels)
