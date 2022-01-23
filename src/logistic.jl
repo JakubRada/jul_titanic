@@ -52,7 +52,7 @@ end
 
 computes l2-norm of given vector `x`
 """
-function l2norm(x::Real)
+function l2norm(x)
     return sqrt.(dot(x, x))
 end
 
