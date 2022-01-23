@@ -51,10 +51,6 @@ end
 
 (dataset::Dataset)() = dataset.X
 
-function getranges(dataset::Dataset)
-    return dataset.ranges
-end
-
 struct Labels
     ids::Vector{<:Integer}
     survived::Vector{<:Integer}

@@ -59,14 +59,13 @@ function updateWeights!(H::StrongClassifier, h::WeakClassifier, X::Matrix{<:Real
     H.weights .= newweights / Z
 end
 
-function bestWeak(H::StrongClassifier, X::Matrix{<:Real}, ranges::Vector{Tuple{<:Real, <:Real}}, y::Vector{<:Integer})
+function bestWeak(H::StrongClassifier, X::Matrix{<:Real}, Xsorted::Matrix{<:Real}, y::Vector{<:Integer})
     dim, n = size(X)
     opterror = Inf64
     local opth
 
     for feature in 2:dim
-        x = sort(X[feature, :])
-        l, u = ranges[feature]
+        x = Xsorted[feature, :]
         for threshold in x
             h = WeakClassifier(feature, threshold, true)
             comp = [h(X[:, i]) for i in 1:n]
@@ -97,12 +96,14 @@ function boost(data::Dataset, labels::Labels; limit::Integer = 100)
     X = data()
     y = labels()
 
+    sorted = vcat([sort(row) for row in eachrow(X)]'...)
+
     n = data.passengers
 
     H = StrongClassifier(n)
 
     for _ in 1:limit
-        h, error = bestWeak(H, X, getranges(data), y)
+        h, error = bestWeak(H, X, sorted, y)
 
         if error >= 0.5
             break
