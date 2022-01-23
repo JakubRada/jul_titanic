@@ -88,7 +88,7 @@ end
 function Base.show(io::IO, H::StrongClassifier)
     println(io, "=== Strong classifier H ===")
     for i in 1:length(H.weaks)
-        println("$(H.weaks[i]) ... Z = $(H.Z[i])")
+        println(io, "$(H.weaks[i]) ... Z = $(H.Z[i])")
     end
 end
 
@@ -134,6 +134,7 @@ function bestWeak(H::StrongClassifier, X::Matrix{<:Real}, Xsorted::Matrix{<:Real
     for feature in 2:dim
         x = Xsorted[feature, :]
         for threshold in x
+            improved = false
             h = WeakClassifier(feature, threshold, true)
             comp = [h(X[:, i]) for i in 1:n]
             diff = comp .!= y
@@ -141,6 +142,7 @@ function bestWeak(H::StrongClassifier, X::Matrix{<:Real}, Xsorted::Matrix{<:Real
             if err < opterror
                 opterror = err
                 opth = h
+                improved = true
             end
 
             h = WeakClassifier(feature, threshold, false)
@@ -150,6 +152,11 @@ function bestWeak(H::StrongClassifier, X::Matrix{<:Real}, Xsorted::Matrix{<:Real
             if err < opterror
                 opterror = err
                 opth = h
+                improved = true
+            end
+
+            if !improved
+                break
             end
         end
     end

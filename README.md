@@ -6,8 +6,8 @@ More information on [Kaggle](https://www.kaggle.com/c/titanic/overview)
 ## Package structure
 
 - `data/` contains datasets for training and testing downloaded from Kaggle website
+- `report/` contains report written in `Literate.jl` and exported to *jupyter* notebook
 - `results/` contains classified labels for test data meant for submission
-    - `results/results.md` contains summary of train and test errors of individual classifiers
 - `scripts/` contains scripts used to execute individual classifiers - learn from training data and classify test data
 - `src/` contains source files of the package
     - `adaboost.jl` - the adaboost classifier
