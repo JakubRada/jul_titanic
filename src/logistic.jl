@@ -1,8 +1,8 @@
-function regression(data::Dataset, labels::Labels)
+function regression(data::Dataset, labels::Labels; kwargs...)
     trainX = data()
     trainy = labels()
 
-    w = gd(trainX, trainy)
+    w = gd(trainX, trainy; kwargs...)
 
     return w
 end
