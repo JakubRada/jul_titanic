@@ -7,9 +7,22 @@ function svm(dataset::Dataset, labels::Labels; C::Real = 10.0)
     return alpha
 end
 
-function kernel(xi::Vector{<:Real}, xj::Vector{<:Real}; sigma::Real = 1.0)
+function linearkernel(xi::Vector{<:Real}, xj::Vector{<:Real})
     return dot(xi, xj)
-    # return exp(-dot(xi - xj, xi - xj) / (2 * sigma^2))
+end
+
+function polynomialkernel(xi::Vector{<:Real}, xj::Vector{<:Real}; degree::Integer = 1)
+    return (1 + dot(xi, xj))^degree
+end
+
+function gaussiankernel(xi::Vector{<:Real}, xj::Vector{<:Real}; variance::Real = 1.0)
+    return exp(-dot(xi - xj, xi - xj) / (2 * variance))
+end
+
+function kernel(xi::Vector{<:Real}, xj::Vector{<:Real})
+    return linearkernel(xi, xj)
+    # return guassiankernel(xi, xj)
+    # return polynomialkernel(xi, xj; degree=2)
 end
 
 function dual(X::Matrix{<:Real}, y::Vector{<:Integer}, C::Real)

@@ -90,8 +90,6 @@ function bestWeak(H::StrongClassifier, X::Matrix{<:Real}, Xsorted::Matrix{<:Real
     return WeakClassifier(opth.feature, opth.threshold, opth.bigger, opterror), opterror
 end
 
-addWeak!(H::StrongClassifier, h::WeakClassifier) = push!(H.weaks, h)
-
 function boost(data::Dataset, labels::Labels; limit::Integer = 100)
     X = data()
     y = labels()
@@ -109,7 +107,7 @@ function boost(data::Dataset, labels::Labels; limit::Integer = 100)
             break
         end
 
-        addWeak!(H, h)
+        push!(H.weaks, h)
 
         updateWeights!(H, h, X, y)
 

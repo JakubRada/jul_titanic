@@ -42,6 +42,11 @@ struct Dataset
 
         return new(passengers, ids, X)
     end
+
+    function Dataset(data::Matrix{<:Real})
+        _, n = size(data)
+        return new(n, collect(1:n), data)
+    end
 end
 
 function normalize!(X::Matrix{<:Real})
@@ -65,6 +70,11 @@ struct Labels
 
     function Labels(data::Dataset, survived::Vector{<:Integer})
         return new(data.ids, survived)
+    end
+
+    function Labels(survived::Vector{<:Integer})
+        n = length(survived)
+        return new(collect(1:n), survived)
     end
 end
 
