@@ -8,7 +8,8 @@ function svm(dataset::Dataset, labels::Labels; C::Real = 10.0)
 end
 
 function kernel(xi::Vector{<:Real}, xj::Vector{<:Real}; sigma::Real = 1.0)
-    return exp(-dot(xi - xj, xi - xj) / (2 * sigma^2))
+    return dot(xi, xj)
+    # return exp(-dot(xi - xj, xi - xj) / (2 * sigma^2))
 end
 
 function dual(X::Matrix{<:Real}, y::Vector{<:Integer}, C::Real)

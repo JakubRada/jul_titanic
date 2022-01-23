@@ -2,10 +2,11 @@ module titanic
 
 using CSV
 using DataFrames
-using LinearAlgebra
-using Parameters
 using JuMP
+using LinearAlgebra
 using OSQP
+using Parameters
+using Statistics
 
 include("dataset.jl")
 include("io.jl")

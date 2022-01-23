@@ -27,7 +27,7 @@ function l2norm(x)
     return sqrt.(dot(x, x))
 end
 
-function gd(X::Matrix{<:Real}, k::Vector{<:Integer}; epsilon=1e-2, step=1.0)
+function gd(X::Matrix{<:Real}, k::Vector{<:Integer}; epsilon=1e-4, step=1.0)
     dim, _ = size(X)
 
     w = zeros(Float64, dim)

@@ -4,7 +4,7 @@ struct Dataset
     X::Matrix{<:Real}
     ranges::Vector{Tuple{<:Real, <:Real}}
 
-    function Dataset(data::DataFrame)
+    function Dataset(data::DataFrame; normalize=true)
         ids = data[!, :PassengerId]
         passengers = length(ids)
         X = ones(8, passengers)
@@ -36,10 +36,20 @@ struct Dataset
         X[8, embarked .== "Q"] .= 2
         X[8, embarked .== "S"] .= 3
 
+        if normalize
+            normalize!(X)
+            X[1, :] .= 1
+        end
+
         ranges = [(minimum(x), maximum(x)) for x in eachrow(X)]
 
         return new(passengers, ids, X, ranges)
     end
+end
+
+function normalize!(X::Matrix{<:Real})
+    X .-= mean(X; dims=2)
+    X ./= std(X; dims=2)
 end
 
 (dataset::Dataset)() = dataset.X
